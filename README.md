@@ -68,7 +68,7 @@ Optional demo data: `python scripts/seed_fake_data.py --email <you> --password <
 cd backend
 pip install -r requirements-dev.txt
 pytest -q --cov=app        # AWS is mocked with moto, Redis with fakeredis, model calls with mocks
-ruff check app tests --line-length 110
+ruff check app tests
 bandit -r app -ll
 ```
 
