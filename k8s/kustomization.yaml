@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: rag-app
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - redis-deployment.yaml
+  - redis-service.yaml
+  - backend-deployment.yaml
+  - backend-service.yaml
+  - worker-deployment.yaml
+  - worker-hpa.yaml
+  - frontend-deployment.yaml
+  - frontend-service.yaml
+  - hpa.yaml
+  - ingress.yaml
+  - networkpolicy.yaml
+# secret.yaml is intentionally NOT listed here -- apply it separately
+# (see secret-template.yaml) so a placeholder secret never gets deployed
+# by accident.

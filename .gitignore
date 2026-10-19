@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
+.coverage
+htmlcov/
+
+# Env / secrets
+.env
+k8s/secret.yaml
+
+# Terraform
+infra/terraform/.terraform/
+infra/terraform/*.tfstate
+infra/terraform/*.tfstate.*
+infra/terraform/.terraform.lock.hcl
+infra/terraform/*.tfvars
+
+# Docker / infra
+localstack-data/
+redis-data/
+
+# Node (if you ever add tooling)
+node_modules/
+
+# OS / editor
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Logs
+*.log

@@ -1,0 +1,82 @@
+# Local stack: API + Celery worker + Redis + LocalStack (fake S3/DynamoDB) + Nginx UI.
+#
+# LocalStack fakes S3, DynamoDB and Secrets Manager so the full pipeline runs without touching a real
+# AWS bill. Data lives in LocalStack's memory, so `docker compose down` wipes it (sign up again).
+# Embeddings/LLM never go to LocalStack: use Bedrock (real AWS creds) or the no-Bedrock mode
+# (EMBEDDING_PROVIDER=pinecone + LLM_PROVIDER=openai_compatible), see README.
+#
+# Host ports are overridable from .env if something on your machine already uses them:
+#   FRONTEND_PORT (default 8080), BACKEND_PORT (default 8000), LOCALSTACK_PORT (default 4566)
+services:
+  localstack:
+    image: localstack/localstack:3.7
+    container_name: rag-localstack
+    ports:
+      - "${LOCALSTACK_PORT:-4566}:4566"
+    environment:
+      - SERVICES=s3,dynamodb,secretsmanager
+      - DEBUG=0
+
+  redis:
+    image: redis:7-alpine
+    container_name: rag-redis
+    # No host port on purpose: only the containers need Redis (avoids clashes with a local Redis).
+    volumes:
+      - redis-data:/data
+
+  backend:
+    build:
+      context: ./backend
+    container_name: rag-backend
+    depends_on:
+      - localstack
+      - redis
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    env_file:
+      - .env
+    environment:
+      APP_ENV: development
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: fake-access-key
+      AWS_SECRET_ACCESS_KEY: fake-secret-key
+      AWS_ENDPOINT_URL: http://localstack:4566
+      S3_BUCKET_NAME: rag-documents-bucket
+      DYNAMODB_TABLE_NAME: rag-documents-metadata
+      REDIS_URL: redis://redis:6379/0
+      CORS_ORIGINS: "*"
+
+  worker:
+    build:
+      context: ./backend
+    container_name: rag-worker
+    command: ["celery", "-A", "app.celery_app.celery_app", "worker", "--loglevel=info", "--concurrency=2"]
+    depends_on:
+      - localstack
+      - redis
+    env_file:
+      - .env
+    environment:
+      APP_ENV: development
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: fake-access-key
+      AWS_SECRET_ACCESS_KEY: fake-secret-key
+      AWS_ENDPOINT_URL: http://localstack:4566
+      S3_BUCKET_NAME: rag-documents-bucket
+      DYNAMODB_TABLE_NAME: rag-documents-metadata
+      REDIS_URL: redis://redis:6379/0
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: rag-frontend
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    environment:
+      BACKEND_HOST: backend
+      BACKEND_PORT: "8000"
+
+volumes:
+  redis-data:

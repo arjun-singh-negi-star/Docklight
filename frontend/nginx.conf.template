@@ -1,0 +1,29 @@
+# NOTE: this file is processed by the official nginx image's built-in
+# envsubst-on-startup mechanism (files under /etc/nginx/templates/*.template
+# get env vars substituted into /etc/nginx/conf.d/). Only variables that are
+# actually set in the container's environment get replaced -- nginx's own
+# runtime variables like $uri, $host and $remote_addr are left untouched
+# because they are not OS environment variables.
+server {
+    listen 80;
+    server_name _;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api/ {
+        proxy_pass http://${BACKEND_HOST}:${BACKEND_PORT}/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    location /health {
+        proxy_pass http://${BACKEND_HOST}:${BACKEND_PORT}/health;
+    }
+
+    gzip on;
+    gzip_types text/css application/javascript application/json;
+}

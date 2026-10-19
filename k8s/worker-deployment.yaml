@@ -1,0 +1,39 @@
+# Runs the SAME image as the backend API, just with a different command --
+# a Celery worker instead of the uvicorn server. This is the standard way to
+# scale ingestion independently of request-handling capacity (see
+# worker-hpa.yaml): more uploads at once -> more worker pods, without
+# touching the API deployment at all.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: rag-app
+  labels:
+    app: worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      # serviceAccountName: rag-backend-sa   # uncomment when using IRSA on EKS
+      containers:
+        - name: worker
+          image: <YOUR_REGISTRY>/rag-backend:latest
+          command: ["celery", "-A", "app.celery_app.celery_app", "worker", "--loglevel=info", "--concurrency=2"]
+          envFrom:
+            - configMapRef:
+                name: rag-config
+            - secretRef:
+                name: rag-secrets
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "512Mi"

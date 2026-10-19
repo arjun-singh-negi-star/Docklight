@@ -1,0 +1,26 @@
+# eksctl config to spin up the Kubernetes cluster ON AWS (EKS) itself, so
+# "Kubernetes" and "AWS Integration" are the same infrastructure.
+#
+# Usage:
+#   eksctl create cluster -f infra/eks-cluster.yaml
+#   eksctl delete cluster -f infra/eks-cluster.yaml   # when you're done
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: docklight-rag-cluster
+  region: us-east-1
+  version: "1.30"
+
+managedNodeGroups:
+  - name: rag-workers
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 4
+    volumeSize: 20
+
+# Required so infra/iam-policy.json can be attached to a Kubernetes service
+# account (IRSA) instead of putting long-lived AWS keys in a Secret.
+iam:
+  withOIDC: true

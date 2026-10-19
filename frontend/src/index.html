@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Docklight — a knowledge assistant that shows its work</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="auth-screen" id="authScreen">
+    <div class="auth-card">
+      <div class="wordmark">Docklight</div>
+      <p class="tagline">Answers grounded in the documents you add — nothing else.</p>
+
+      <form id="authForm">
+        <label>Email
+          <input type="email" id="authEmail" required autocomplete="email" />
+        </label>
+        <label>Password
+          <input type="password" id="authPassword" required minlength="8" autocomplete="current-password" />
+        </label>
+        <button type="submit" id="authSubmit">Log in</button>
+      </form>
+
+      <p class="auth-toggle">
+        <span class="auth-toggle-label">Need an account?</span>
+        <button type="button" id="authToggle">Sign up</button>
+      </p>
+      <p class="auth-error" id="authError" hidden></p>
+    </div>
+  </div>
+
+  <div class="shell" id="shell" hidden>
+    <aside class="index">
+      <div class="wordmark">Docklight</div>
+      <p class="tagline">Answers grounded in the documents you add here — nothing else.</p>
+
+      <div class="status" id="status">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Checking connection</span>
+      </div>
+
+      <label class="add-btn" for="fileInput">Add document</label>
+      <input type="file" id="fileInput" accept=".pdf,.docx,.csv,.html,.htm,.txt,.md" hidden />
+      <p class="add-hint">PDF, Word, CSV, HTML, text or Markdown. It's queued, chunked, embedded, and indexed in the background — refresh to see status.</p>
+
+      <div class="index-header">
+        <span>Sources</span>
+        <button id="refreshDocs" title="Refresh list">Refresh</button>
+      </div>
+      <ul class="doc-list" id="docList">
+        <li class="doc-empty">Nothing added yet.</li>
+      </ul>
+
+      <div class="account-row">
+        <span id="accountEmail"></span>
+        <button id="logoutBtn">Log out</button>
+      </div>
+    </aside>
+
+    <main class="reading-pane">
+      <div class="pane-topbar">
+        <button id="newConversationBtn" class="text-btn">New conversation</button>
+      </div>
+      <div class="scroll" id="scroll">
+        <div class="intro" id="intro">
+          <h1>Ask about your documents</h1>
+          <p>Add a file on the left, then ask a question below. Every answer points back to the exact passage it came from, and follow-up questions remember the conversation.</p>
+        </div>
+      </div>
+
+      <form class="composer" id="composerForm">
+        <textarea id="questionInput" placeholder="Ask a question about what you've added…" rows="1"></textarea>
+        <button type="submit" id="sendBtn">Ask</button>
+      </form>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

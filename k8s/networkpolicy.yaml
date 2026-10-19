@@ -1,0 +1,66 @@
+# Default-deny plus explicit allow rules, so a compromised pod can't freely
+# reach everything else in the namespace. This is the kind of control that
+# separates a "it runs on Kubernetes" project from a production-ready one.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: rag-app
+spec:
+  podSelector: {}
+  policyTypes: ["Ingress"]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-backend
+  namespace: rag-app
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend
+        - namespaceSelector: {}   # also allow the ingress controller to reach the backend
+      ports:
+        - port: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-to-frontend
+  namespace: rag-app
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes: ["Ingress"]
+  ingress:
+    - from: []
+      ports:
+        - port: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-and-worker-to-redis
+  namespace: rag-app
+spec:
+  podSelector:
+    matchLabels:
+      app: redis
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: backend
+        - podSelector:
+            matchLabels:
+              app: worker
+      ports:
+        - port: 6379

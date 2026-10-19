@@ -1,0 +1,21 @@
+Docklight Demo Co. — Employee Handbook (Sample Fake Data)
+
+Working hours: Standard working hours are 9:30 AM to 6:30 PM, Monday through
+Friday, with a flexible one-hour lunch window. Employees may request a
+flexible schedule through their manager.
+
+Leave policy: Full-time employees accrue 18 days of paid leave per year,
+credited monthly. Unused leave up to 10 days can be carried forward to the
+next calendar year. Sick leave is tracked separately and does not require
+advance notice for up to 3 consecutive days.
+
+Refund and reimbursement policy: Approved business expenses are reimbursed
+within 14 business days of submitting a receipt through the expense portal.
+Reimbursements above 20,000 require manager approval before submission.
+
+Remote work: Employees may work remotely up to 3 days per week. Fully remote
+arrangements require written approval from both the manager and HR.
+
+Laptop and equipment policy: New employees receive a company laptop within
+the first week. Equipment must be returned within 7 days of the employee's
+last working day.

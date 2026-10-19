@@ -1,0 +1,22 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+boto3==1.35.0
+pinecone==5.0.1
+pypdf==4.3.1
+python-docx==1.1.2
+beautifulsoup4==4.12.3
+python-multipart==0.0.9
+pydantic==2.9.2
+email-validator==2.2.0
+pydantic-settings==2.5.2
+python-dotenv==1.0.1
+tenacity==9.0.0
+openai==1.51.2
+httpx==0.27.2  # openai 1.51 breaks on httpx>=0.28 ("unexpected keyword argument proxies")
+celery==5.4.0
+redis==5.0.8
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
+prometheus-client==0.20.0
+rank-bm25==0.2.2
