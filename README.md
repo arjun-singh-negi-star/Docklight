@@ -1,11 +1,17 @@
 # Docklight
 
+[![CI/CD](https://github.com/arjun-singh-negi-star/Docklight/actions/workflows/ci-cd.yaml/badge.svg)](https://github.com/arjun-singh-negi-star/Docklight/actions/workflows/ci-cd.yaml)
+
+![Docklight chat with sources](docs/screenshots/chat.png)
+
 A multi-tenant **RAG (retrieval-augmented generation)** assistant. Users sign up, upload documents, and ask
 questions that are answered **only from their own documents**, streamed live, with clickable source citations,
 conversation memory, and replies in the language they asked in (Hinglish, Hindi, Chinese, Korean, ...).
 
 **Stack:** FastAPI · Celery + Redis · Pinecone · AWS (S3, DynamoDB, Bedrock, Secrets Manager) · Docker ·
 Kubernetes (EKS) · Terraform · GitHub Actions
+
+[![CI/CD](https://github.com/arjun-singh-negi-star/Docklight/actions/workflows/ci-cd.yaml/badge.svg)](https://github.com/arjun-singh-negi-star/Docklight/actions/workflows/ci-cd.yaml)
 
 ## Verification status
 
